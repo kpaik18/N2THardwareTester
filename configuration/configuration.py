@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import List
+import yaml
 
 
 @dataclass
@@ -16,4 +17,7 @@ class IConfigurationParser:
 
 class ConfigurationParser:
     def parse_configuration_file(self, configuration_file_path: str) -> Configuration:
-        pass
+        with open("example.yml", "r") as f:
+            data = yaml.safe_load(f)
+
+        print(data)
