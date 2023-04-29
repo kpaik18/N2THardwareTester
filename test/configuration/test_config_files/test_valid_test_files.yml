@@ -1,0 +1,11 @@
+archive_type: zip
+working_files:
+  - working1.hdl
+  - working2.hdl
+  - working3.hdl
+  - working4.asm
+test_files:
+  - test1.tst
+  - test2.tst
+  - test3.tst
+  - test4.tst

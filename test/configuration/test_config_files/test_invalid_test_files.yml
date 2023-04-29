@@ -1,0 +1,8 @@
+archive_type: zip
+working_files:
+  - working1.hdl
+  - working2.asm
+test_files:
+  - test1.hdl
+  - test2.asm
+  - test3.txt

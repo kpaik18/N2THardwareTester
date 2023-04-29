@@ -1,0 +1,7 @@
+archive_type: zip
+working_files:
+  - working1.txt
+  - working2.txt
+test_files:
+  - test1.tst
+  - test2.tst
