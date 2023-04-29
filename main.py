@@ -1,6 +1,6 @@
 import os
 
-PROJECT_PATH = os.getenv("n2t_hardware_tester_project_path")
+PROJECT_PATH: str = os.getenv("n2t_hardware_tester_project_path")  # type: ignore
 
 
 def print_hi(name):
