@@ -1,7 +1,7 @@
 import pytest
 
 from configuration.configuration import ConfigurationParser, IConfigurationParser
-from main import PROJECT_PATH
+from n2tconfig import PROJECT_PATH
 
 configuration_test_path = "test/configuration/test_config_files"
 
