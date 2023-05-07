@@ -7,3 +7,4 @@ test_files:
   - test2.asm
   - test3.txt
 tester_program: HardwareSimulator
+homework_name: '01'

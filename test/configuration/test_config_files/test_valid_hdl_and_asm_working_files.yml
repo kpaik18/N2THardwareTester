@@ -9,3 +9,4 @@ test_files:
   - test2.tst
   - test3.tst
 tester_program: HardwareSimulator
+homework_name: '01'

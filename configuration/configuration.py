@@ -14,6 +14,7 @@ class Configuration:
     working_files: List[str]
     test_files: List[str]
     tester_program: str
+    homework_name: str
 
 
 class IConfigurationParser(Protocol):
@@ -35,6 +36,7 @@ class ConfigurationParser:
             data["working_files"],
             data["test_files"],
             data["tester_program"],
+            data["homework_name"]
         )
 
     def is_valid_configuration_file(self, configuration_file_path: str) -> bool:
@@ -44,6 +46,8 @@ class ConfigurationParser:
 
     def _is_valid_configuration_data(self, data: Dict[Any, Any]) -> bool:
         if "archive_type" not in data or data["archive_type"] != "zip":
+            return False
+        if "homework_name" not in data:
             return False
         if (
             "tester_program" not in data

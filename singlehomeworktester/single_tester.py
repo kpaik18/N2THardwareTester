@@ -23,12 +23,12 @@ class SingleHomeworkTester:
         extracted_folder_path = self._unzip_archive_get_extract_folder_path(
             archive_path, config.archive_type
         )
-        self._remove_working_files_from_hw_project(config.working_files, homework_name)
+        self._remove_working_files_from_hw_project(config.working_files, config.homework_name)
         self._copy_working_files_to_project(
-            extracted_folder_path, config.working_files, homework_name
+            extracted_folder_path, config.working_files, config.homework_name
         )
         return self._run_tests_and_grade(
-            config.test_files, homework_name, config.tester_program
+            config.test_files, config.homework_name, config.tester_program
         )
 
     def _unzip_archive_get_extract_folder_path(
