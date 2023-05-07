@@ -55,6 +55,9 @@ class SingleHomeworkTester:
         hw_project_path = os.path.join(N2T_WORK_AREA_PATH, "projects", homework_name)
         for w_file in working_files:
             w_file_path = os.path.join(extracted_folder_path, w_file)
+            if not os.path.exists(w_file_path):
+                with open(w_file_path, "w") as f:
+                    pass
             shutil.copy(w_file_path, hw_project_path)
 
     def _run_tests_and_grade(self, test_files, homework_name) -> TestResult:
