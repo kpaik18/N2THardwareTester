@@ -6,3 +6,4 @@ test_files:
   - test1.hdl
   - test2.asm
   - test3.txt
+tester_program: HardwareSimulator

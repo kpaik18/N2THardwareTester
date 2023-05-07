@@ -8,3 +8,4 @@ test_files:
   - test1.tst
   - test2.tst
   - test3.tst
+tester_program: HardwareSimulator

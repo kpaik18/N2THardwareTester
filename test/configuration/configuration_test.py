@@ -42,6 +42,7 @@ def test_parse_valid_configuration_files() -> None:
     assert "working1.hdl" in config.working_files
     assert "working4.asm" in config.working_files
     assert "test1.tst" in config.test_files
+    assert config.tester_program == 'HardwareSimulator'
 
 
 def test_should_not_parse_invalid_configuration_file() -> None:

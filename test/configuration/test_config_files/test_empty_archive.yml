@@ -4,3 +4,4 @@ working_files:
 test_files:
   - test1.tst
   - test2.tst
+tester_program: HardwareSimulator

@@ -9,3 +9,4 @@ test_files:
   - test2.tst
   - test3.tst
   - test4.tst
+tester_program: HardwareSimulator
