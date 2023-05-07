@@ -27,7 +27,9 @@ class SingleHomeworkTester:
         self._copy_working_files_to_project(
             extracted_folder_path, config.working_files, homework_name
         )
-        return self._run_tests_and_grade(config.test_files, homework_name)
+        return self._run_tests_and_grade(
+            config.test_files, homework_name, config.tester_program
+        )
 
     def _unzip_archive_get_extract_folder_path(
         self, archive_path: str, archive_type: str
@@ -60,8 +62,10 @@ class SingleHomeworkTester:
                     pass
             shutil.copy(w_file_path, hw_project_path)
 
-    def _run_tests_and_grade(self, test_files, homework_name) -> TestResult:
-        command = "HardwareSimulator"
+    def _run_tests_and_grade(
+        self, test_files, homework_name, tester_program
+    ) -> TestResult:
+        command = tester_program
         hw_project_path = os.path.join(N2T_WORK_AREA_PATH, "projects", homework_name)
         success_count = 0
         for t_file in test_files:

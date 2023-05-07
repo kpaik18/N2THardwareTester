@@ -1,4 +1,5 @@
 archive_type: zip
+tester_program: HardwareSimulator
 working_files:
   - And.hdl
   - And16.hdl
