@@ -9,16 +9,19 @@ from n2tconfig import N2T_WORK_AREA_PATH, TEST_SUCCESS
 from homeworktester.test_result import TestResult
 
 
-class ISingleHomeworkTester(Protocol):
+class IHomeworkTester(Protocol):
     def test_homework(
-        self, archive_path: str, config: Configuration, homework_name: str
+            self, archive_path: str, config: Configuration
     ) -> TestResult:
         pass
 
+    def test_homework_folder(self, homework_folder_path: str, config: Configuration) -> None:
+        pass
 
-class SingleHomeworkTester:
+
+class HomeworkTester:
     def test_homework(
-        self, archive_path: str, config: Configuration, homework_name: str
+            self, archive_path: str, config: Configuration
     ) -> TestResult:
         extracted_folder_path = self._unzip_archive_get_extract_folder_path(
             archive_path, config.archive_type
@@ -27,12 +30,28 @@ class SingleHomeworkTester:
         self._copy_working_files_to_project(
             extracted_folder_path, config.working_files, config.homework_name
         )
+        _, archive_name = os.path.split(archive_path)
+        archive_name = archive_name[:archive_name.rfind('.')]
         return self._run_tests_and_grade(
-            config.test_files, config.homework_name, config.tester_program
+            config.test_files, config.homework_name, config.tester_program, archive_name
         )
 
+    def test_homework_folder(self, homework_folder_path: str, config: Configuration) -> None:
+        if not os.path.exists(homework_folder_path):
+            print("Folder with that path does not exist")
+            return None
+        if not os.path.isdir(homework_folder_path):
+            print("Not A directory")
+            return None
+        homeworks = os.listdir(homework_folder_path)
+        test_results = []
+        for h in homeworks:
+            h_path = os.path.join(homework_folder_path, h)
+            test_results.append(self.test_homework(h_path, config))
+        return test_results
+
     def _unzip_archive_get_extract_folder_path(
-        self, archive_path: str, archive_type: str
+            self, archive_path: str, archive_type: str
     ) -> str:
         directory_path, filename = os.path.split(archive_path)
         extract_path_folder_name = filename[: filename.rfind(".")]
@@ -52,7 +71,7 @@ class SingleHomeworkTester:
                 pass
 
     def _copy_working_files_to_project(
-        self, extracted_folder_path, working_files, homework_name
+            self, extracted_folder_path, working_files, homework_name
     ):
         hw_project_path = os.path.join(N2T_WORK_AREA_PATH, "projects", homework_name)
         for w_file in working_files:
@@ -63,7 +82,7 @@ class SingleHomeworkTester:
             shutil.copy(w_file_path, hw_project_path)
 
     def _run_tests_and_grade(
-        self, test_files, homework_name, tester_program
+            self, test_files, homework_name, tester_program, archive_name
     ) -> TestResult:
         command = tester_program
         hw_project_path = os.path.join(N2T_WORK_AREA_PATH, "projects", homework_name)
@@ -78,4 +97,4 @@ class SingleHomeworkTester:
             )
             if result.strip() == TEST_SUCCESS:
                 success_count += 1
-        return TestResult(len(test_files), success_count)
+        return TestResult(archive_name, len(test_files), success_count)

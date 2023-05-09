@@ -2,9 +2,9 @@ import os.path
 
 from configuration.configuration import ConfigurationParser, IConfigurationParser
 from n2tconfig import PROJECT_PATH
-from homeworktester.single_tester import (
-    ISingleHomeworkTester,
-    SingleHomeworkTester,
+from homeworktester.homework_tester import (
+    IHomeworkTester,
+    HomeworkTester,
 )
 
 
@@ -19,8 +19,8 @@ def test_valid_homework() -> None:
         os.path.join(test_archive_folder_path, "config", "hw1.yml")
     )
 
-    single_tester: ISingleHomeworkTester = SingleHomeworkTester()
-    res = single_tester.test_homework(valid_archive_path, config, "01")
+    single_tester: IHomeworkTester = HomeworkTester()
+    res = single_tester.test_homework(valid_archive_path, config)
     assert res.full_count == res.passed_count
 
 
@@ -35,8 +35,8 @@ def test_not_valid_and_homework() -> None:
         os.path.join(test_archive_folder_path, "config", "hw1.yml")
     )
 
-    single_tester: ISingleHomeworkTester = SingleHomeworkTester()
-    res = single_tester.test_homework(valid_archive_path, config, "01")
+    single_tester: IHomeworkTester = HomeworkTester()
+    res = single_tester.test_homework(valid_archive_path, config)
     assert res.full_count != res.passed_count
     assert res.passed_count == 5
 
@@ -52,8 +52,8 @@ def test_not_valid_mux_homework() -> None:
         os.path.join(test_archive_folder_path, "config", "hw1.yml")
     )
 
-    single_tester: ISingleHomeworkTester = SingleHomeworkTester()
-    res = single_tester.test_homework(valid_archive_path, config, "01")
+    single_tester: IHomeworkTester = HomeworkTester()
+    res = single_tester.test_homework(valid_archive_path, config)
     assert res.full_count != res.passed_count
     assert res.passed_count == 8
 
@@ -71,7 +71,7 @@ def test_without_and_implemented() -> None:
         os.path.join(test_archive_folder_path, "config", "hw1.yml")
     )
 
-    single_tester: ISingleHomeworkTester = SingleHomeworkTester()
-    res = single_tester.test_homework(valid_archive_path, config, "01")
+    single_tester: IHomeworkTester = HomeworkTester()
+    res = single_tester.test_homework(valid_archive_path, config)
     assert res.full_count != res.passed_count
     assert res.passed_count == 5
