@@ -2,7 +2,7 @@ import os.path
 
 from configuration.configuration import ConfigurationParser, IConfigurationParser
 from n2tconfig import PROJECT_PATH
-from singlehomeworktester.single_tester import (
+from homeworktester.single_tester import (
     ISingleHomeworkTester,
     SingleHomeworkTester,
 )
@@ -10,7 +10,7 @@ from singlehomeworktester.single_tester import (
 
 def test_valid_homework() -> None:
     test_archive_folder_path = os.path.join(
-        PROJECT_PATH, "test", "singlehomeworktester", "homeworkarchives"
+        PROJECT_PATH, "test", "homeworktester", "homeworkarchives"
     )
     valid_archive_path = os.path.join(test_archive_folder_path, "valid.zip")
 
@@ -26,7 +26,7 @@ def test_valid_homework() -> None:
 
 def test_not_valid_and_homework() -> None:
     test_archive_folder_path = os.path.join(
-        PROJECT_PATH, "test", "singlehomeworktester", "homeworkarchives"
+        PROJECT_PATH, "test", "homeworktester", "homeworkarchives"
     )
     valid_archive_path = os.path.join(test_archive_folder_path, "and_not_valid.zip")
 
@@ -43,7 +43,7 @@ def test_not_valid_and_homework() -> None:
 
 def test_not_valid_mux_homework() -> None:
     test_archive_folder_path = os.path.join(
-        PROJECT_PATH, "test", "singlehomeworktester", "homeworkarchives"
+        PROJECT_PATH, "test", "homeworktester", "homeworkarchives"
     )
     valid_archive_path = os.path.join(test_archive_folder_path, "mux_not_valid.zip")
 
@@ -60,7 +60,7 @@ def test_not_valid_mux_homework() -> None:
 
 def test_without_and_implemented() -> None:
     test_archive_folder_path = os.path.join(
-        PROJECT_PATH, "test", "singlehomeworktester", "homeworkarchives"
+        PROJECT_PATH, "test", "homeworktester", "homeworkarchives"
     )
     valid_archive_path = os.path.join(
         test_archive_folder_path, "and_not_implemented.zip"

@@ -1,13 +1,28 @@
 import os
 
-PROJECT_PATH: str = os.getenv("n2t_hardware_tester_project_path")  # type: ignore
+from configuration.configuration import Configuration
+from homeworktester.single_tester import (
+    ISingleHomeworkTester,
+    SingleHomeworkTester,
+)
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f"Hi, {name}")  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == "__main__":
-    print_hi("N2T Hardware Tester")
+    single_tester: ISingleHomeworkTester = SingleHomeworkTester()
+    res = single_tester.test_homework(
+        os.path.join("C:/Users/Surface/Desktop/nglun20.zip"),
+        Configuration(
+            "zip",
+            [
+                "Not.hdl",
+                "And.hdl",
+                "Or.hdl",
+                "Xor.hdl",
+                "Mux.hdl",
+                "DMux.hdl",
+                "And16.hdl",
+            ],
+            ["Not.tst", "And.tst", "Or.tst", "Xor.tst", "Mux.tst", "DMux.tst"],
+        ),
+        "01",
+    )
+    print(res)

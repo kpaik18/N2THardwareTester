@@ -6,7 +6,7 @@ from typing import Protocol
 
 from configuration.configuration import Configuration
 from n2tconfig import N2T_WORK_AREA_PATH, TEST_SUCCESS
-from singlehomeworktester.test_result import TestResult
+from homeworktester.test_result import TestResult
 
 
 class ISingleHomeworkTester(Protocol):
