@@ -2,7 +2,7 @@ import os
 import shutil
 import subprocess
 import zipfile
-from typing import Protocol, List
+from typing import List, Protocol
 
 from configuration.configuration import Configuration
 from homeworktester.test_result import TestResult
