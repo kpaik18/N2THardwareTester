@@ -2,41 +2,43 @@ import os
 import shutil
 import subprocess
 import zipfile
-from typing import Protocol
+from typing import Protocol, List
 
 from configuration.configuration import Configuration
-from n2tconfig import N2T_WORK_AREA_PATH, TEST_SUCCESS
 from homeworktester.test_result import TestResult
+from n2tconfig import N2T_WORK_AREA_PATH, TEST_SUCCESS
 
 
 class IHomeworkTester(Protocol):
-    def test_homework(
-            self, archive_path: str, config: Configuration
-    ) -> TestResult:
+    def test_homework(self, archive_path: str, config: Configuration) -> TestResult:
         pass
 
-    def test_homework_folder(self, homework_folder_path: str, config: Configuration) -> None:
+    def test_homework_folder(
+        self, homework_folder_path: str, config: Configuration
+    ) -> List[TestResult]:
         pass
 
 
 class HomeworkTester:
-    def test_homework(
-            self, archive_path: str, config: Configuration
-    ) -> TestResult:
+    def test_homework(self, archive_path: str, config: Configuration) -> TestResult:
         extracted_folder_path = self._unzip_archive_get_extract_folder_path(
             archive_path, config.archive_type
         )
-        self._remove_working_files_from_hw_project(config.working_files, config.homework_name)
+        self._remove_working_files_from_hw_project(
+            config.working_files, config.homework_name
+        )
         self._copy_working_files_to_project(
             extracted_folder_path, config.working_files, config.homework_name
         )
         _, archive_name = os.path.split(archive_path)
-        archive_name = archive_name[:archive_name.rfind('.')]
+        archive_name = archive_name[: archive_name.rfind(".")]
         return self._run_tests_and_grade(
             config.test_files, config.homework_name, config.tester_program, archive_name
         )
 
-    def test_homework_folder(self, homework_folder_path: str, config: Configuration) -> None:
+    def test_homework_folder(
+        self, homework_folder_path: str, config: Configuration
+    ) -> List[TestResult]:
         if not os.path.exists(homework_folder_path):
             print("Folder with that path does not exist")
             return None
@@ -51,7 +53,7 @@ class HomeworkTester:
         return test_results
 
     def _unzip_archive_get_extract_folder_path(
-            self, archive_path: str, archive_type: str
+        self, archive_path: str, archive_type: str
     ) -> str:
         directory_path, filename = os.path.split(archive_path)
         extract_path_folder_name = filename[: filename.rfind(".")]
@@ -71,7 +73,7 @@ class HomeworkTester:
                 pass
 
     def _copy_working_files_to_project(
-            self, extracted_folder_path, working_files, homework_name
+        self, extracted_folder_path, working_files, homework_name
     ):
         hw_project_path = os.path.join(N2T_WORK_AREA_PATH, "projects", homework_name)
         for w_file in working_files:
@@ -82,7 +84,7 @@ class HomeworkTester:
             shutil.copy(w_file_path, hw_project_path)
 
     def _run_tests_and_grade(
-            self, test_files, homework_name, tester_program, archive_name
+        self, test_files, homework_name, tester_program, archive_name
     ) -> TestResult:
         command = tester_program
         hw_project_path = os.path.join(N2T_WORK_AREA_PATH, "projects", homework_name)

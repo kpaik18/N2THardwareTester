@@ -36,7 +36,7 @@ class ConfigurationParser:
             data["working_files"],
             data["test_files"],
             data["tester_program"],
-            data["homework_name"]
+            data["homework_name"],
         )
 
     def is_valid_configuration_file(self, configuration_file_path: str) -> bool:
