@@ -1,5 +1,6 @@
 import os.path
-from typing import Protocol
+import sys
+from typing import List, Protocol
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -16,21 +17,77 @@ class IHomeworkFetcher(Protocol):
 
 
 class ClassroomFetcher:
-    def get_assignment_submissions(self, course_code: str, coursework_id: str) -> None:
+    def get_assignment_submissions(
+        self, course_code: str, coursework_code: str
+    ) -> None:
         creds = self._auth()
-        course = self._get_course_by_code(course_code, creds)
-        print(course)
+        service = build("classroom", "v1", credentials=creds)
+        course = self._get_course_by_code(service, course_code)
+        course_student_ids = self._get_course_student_ids(service, course)
+        coursework = self._get_coursework_by_course_and_code(
+            service, course, coursework_code
+        )
+        print("There are " + str(len(course_student_ids)) + " students")
+        self._download_student_submissions(
+            service, course_student_ids, course, coursework
+        )
 
-    def _get_course_by_code(self, course_code: str, creds: Credentials) -> str:
+    def _get_coursework_by_course_and_code(self, service, course, coursework_code):
+        courseworks = (
+            service.courses()
+            .courseWork()
+            .list(courseId=course["id"])
+            .execute()["courseWork"]
+        )
+        for cw in courseworks:
+            if coursework_code in cw["alternateLink"]:
+                return cw
+        print("CourseWork not Found")
+
+    def _download_student_submissions(
+        self, service, course_student_ids, course, coursework
+    ):
+        for student_id in course_student_ids:
+            response = (
+                service.courses()
+                .courseWork()
+                .studentSubmissions()
+                .list(
+                    courseId=course["id"],
+                    courseWorkId=coursework["id"],
+                    userId=student_id,
+                )
+                .execute()
+            )
+            submissions = response.get("studentSubmissions", [])
+            print(submissions)
+
+    def _get_course_student_ids(self, service, course) -> List[str]:
+        course_id = course["id"]
+        all_students = []
+        page_token = None
+        while True:
+            students = (
+                service.courses()
+                .students()
+                .list(courseId=course_id, pageToken=page_token)
+                .execute()
+            )
+            all_students.extend(students["students"])
+            if "nextPageToken" not in students or students["nextPageToken"] is None:
+                break
+            page_token = students["nextPageToken"]
+        student_ids = [student["userId"] for student in all_students]
+        return student_ids
+
+    def _get_course_by_code(self, service, course_code: str) -> str:
         try:
-            service = build("classroom", "v1", credentials=creds)
-
             # Call the Classroom API
             results = service.courses().list().execute()
             courses = results.get("courses", [])
 
             if not courses:
-                print("No courses found.")
+                print("Course by code can't be found")
             for course in courses:
                 alternate_link = course["alternateLink"]
                 code_substring_start_index = alternate_link.rfind("/") + 1
@@ -46,6 +103,7 @@ class ClassroomFetcher:
         SCOPES = [
             "https://www.googleapis.com/auth/classroom.courses.readonly",
             "https://www.googleapis.com/auth/classroom.coursework.students",
+            "https://www.googleapis.com/auth/classroom.rosters",
         ]
         creds = None
         if os.path.exists(tokens_path):
