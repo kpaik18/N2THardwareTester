@@ -1,5 +1,4 @@
 import os.path
-import sys
 from typing import List, Protocol
 
 from google.auth.transport.requests import Request
@@ -27,7 +26,6 @@ class ClassroomFetcher:
         coursework = self._get_coursework_by_course_and_code(
             service, course, coursework_code
         )
-        print("There are " + str(len(course_student_ids)) + " students")
         self._download_student_submissions(
             service, course_student_ids, course, coursework
         )
@@ -60,7 +58,11 @@ class ClassroomFetcher:
                 .execute()
             )
             submissions = response.get("studentSubmissions", [])
-            print(submissions)
+            sorted_submissions = sorted(
+                submissions, key=lambda x: x["updateTime"], reverse=True
+            )
+            if len(submissions) != 1:
+                print(submissions)
 
     def _get_course_student_ids(self, service, course) -> List[str]:
         course_id = course["id"]
