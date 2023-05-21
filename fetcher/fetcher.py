@@ -33,7 +33,8 @@ class ClassroomFetcher:
                 print("No courses found.")
             for course in courses:
                 alternate_link = course["alternateLink"]
-                if alternate_link[alternate_link.rfind("/") + 1 :] == course_code:
+                code_substring_start_index = alternate_link.rfind("/") + 1
+                if alternate_link[code_substring_start_index:] == course_code:
                     return course
 
         except HttpError as error:
