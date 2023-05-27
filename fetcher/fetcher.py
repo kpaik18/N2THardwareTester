@@ -6,19 +6,18 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from googleapiclient.http import MediaIoBaseDownload
 
 from n2tconfig import DOWNLOAD_FOLDER, GOOGLE_API_CREDENTIALS, GOOGLE_API_TOKENS_PATH
 
 
 class IHomeworkFetcher(Protocol):
-    def get_assignment_submissions(self, course_code: str, coursework_id: str) -> None:
+    def get_assignment_submissions(self, course_code: str, coursework_id: str) -> str:
         pass
 
 
 class ClassroomFetcher:
-    def get_assignment_submissions(
-        self, course_code: str, coursework_code: str
-    ) -> None:
+    def get_assignment_submissions(self, course_code: str, coursework_code: str) -> str:
         creds = self._auth()
         service = build("classroom", "v1", credentials=creds)
         course = self._get_course_by_code(service, course_code)
@@ -26,7 +25,7 @@ class ClassroomFetcher:
         coursework = self._get_coursework_by_course_and_code(
             service, course, coursework_code
         )
-        self._download_submissions(service, course, coursework)
+        return self._download_submissions(service, course, coursework)
 
     def _get_coursework_by_course_and_code(self, service, course, coursework_code):
         courseworks = (
@@ -81,6 +80,7 @@ class ClassroomFetcher:
             "https://www.googleapis.com/auth/classroom.courses.readonly",
             "https://www.googleapis.com/auth/classroom.coursework.students",
             "https://www.googleapis.com/auth/classroom.rosters",
+            "https://www.googleapis.com/auth/drive.readonly",
         ]
         creds = None
         if os.path.exists(tokens_path):
@@ -114,20 +114,26 @@ class ClassroomFetcher:
 
         for submission in submissions:
             if (
-                submission["state"] == "TURNED_IN"
-                and len(submission["assignmentSubmission"]) > 0
+                # submission["state"] == "TURNED_IN"
+                # and
+                len(submission["assignmentSubmission"])
+                > 0
             ):
                 user_id = submission["userId"]
                 attachments = submission["assignmentSubmission"].get("attachments", [])
-                for attachment in attachments:
-                    file_link = attachment["driveFile"]["alternateLink"]
-                    file_name = attachment["driveFile"]["title"]
-                    file_path = os.path.join(download_folder, file_name)
-                _ = os.path.dirname(file_path)
-                os.makedirs(_, exist_ok=True)
-                file_data = service._http.request(file_link, method="GET")[1]
-                with open(file_path, "wb") as file:
-                    file.write(file_data)
-                print(f"Downloaded file: {file_name}")
-            else:
-                print("not submitted")
+                attachment = attachments[0]
+                file_id = attachment["driveFile"]["id"]
+                file_title = attachment["driveFile"]["title"]
+
+                creds = self._auth()
+                drive_service = build("drive", "v3", credentials=creds)
+
+                request = drive_service.files().get_media(fileId=file_id)
+                filename = os.path.join(download_folder, file_title)
+
+                with open(filename, "wb") as f:
+                    downloader = MediaIoBaseDownload(f, request)
+                    done = False
+                    while done is False:
+                        status, done = downloader.next_chunk()
+        return download_folder
