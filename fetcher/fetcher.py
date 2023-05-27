@@ -7,7 +7,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-from n2tconfig import GOOGLE_API_CREDENTIALS, GOOGLE_API_TOKENS_PATH
+from n2tconfig import DOWNLOAD_FOLDER, GOOGLE_API_CREDENTIALS, GOOGLE_API_TOKENS_PATH
 
 
 class IHomeworkFetcher(Protocol):
@@ -107,9 +107,7 @@ class ClassroomFetcher:
             .execute()
             .get("studentSubmissions", [])
         )
-        download_folder = os.path.join(
-            "C:/Users/Koba.Paikidze/Desktop/Books/nand2tetris/hardware_tester/download_folder"
-        )
+        download_folder = os.path.join(DOWNLOAD_FOLDER)
         download_folder = os.path.join(download_folder, course["id"], coursework["id"])
         _ = os.path.dirname(download_folder)
         os.makedirs(_, exist_ok=True)
