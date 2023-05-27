@@ -26,9 +26,10 @@ class ClassroomFetcher:
         coursework = self._get_coursework_by_course_and_code(
             service, course, coursework_code
         )
-        self._download_student_submissions(
-            service, course_student_ids, course, coursework
-        )
+        # self._download_student_submissions(
+        #     service, course_student_ids, course, coursework
+        # )
+        self._second_try_submissions(service, course, coursework)
 
     def _get_coursework_by_course_and_code(self, service, course, coursework_code):
         courseworks = (
@@ -45,7 +46,13 @@ class ClassroomFetcher:
     def _download_student_submissions(
         self, service, course_student_ids, course, coursework
     ):
+        counter = 0
+        # bekas_id = "109915369104227089235"
         for student_id in course_student_ids:
+            # if student_id != bekas_id:
+            #     continue
+            print(counter)
+            counter += 1
             response = (
                 service.courses()
                 .courseWork()
@@ -58,9 +65,9 @@ class ClassroomFetcher:
                 .execute()
             )
             submissions = response.get("studentSubmissions", [])
-            sorted_submissions = sorted(
-                submissions, key=lambda x: x["updateTime"], reverse=True
-            )
+            latest_submission = submissions[0]
+            if len(latest_submission["assignmentSubmission"]) == 0:
+                print("not submitted")
             if len(submissions) != 1:
                 print(submissions)
 
@@ -122,3 +129,39 @@ class ClassroomFetcher:
             with open(tokens_path, "w") as token:
                 token.write(creds.to_json())
         return creds
+
+    def _second_try_submissions(self, service, course, coursework):
+        submissions = (
+            service.courses()
+            .courseWork()
+            .studentSubmissions()
+            .list(courseId=course["id"], courseWorkId=coursework["id"])
+            .execute()
+            .get("studentSubmissions", [])
+        )
+
+        # Create a folder to store the downloaded files
+        # download_folder = "submissions"
+        # os.makedirs(download_folder, exist_ok=True)
+
+        # Download the files for each submitted student
+        for submission in submissions:
+            if (
+                submission["state"] == "TURNED_IN"
+                and len(submission["assignmentSubmission"]) > 0
+            ):
+                user_id = submission["userId"]
+                print(user_id)
+                # attachments = submission["assignmentSubmission"].get("attachments", [])
+                # for attachment in attachments:
+                #     file_link = attachment["link"]["url"]
+                #     file_name = attachment["driveFile"]["title"]
+                #     file_path = os.path.join(download_folder, file_name)
+                #
+                #     Download the file
+                # file_data = service._http.request(file_link, method="GET")[1]
+                # with open(file_path, "wb") as file:
+                #     file.write(file_data)
+                # print(f"Downloaded file: {file_name}")
+            else:
+                print("not submitted")
