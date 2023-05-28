@@ -21,6 +21,12 @@ class IHomeworkTester(Protocol):
 
 class HomeworkTester:
     def test_homework(self, archive_path: str, config: Configuration) -> TestResult:
+        archive_type = archive_path[archive_path.rfind(".") + 1 :]
+        _, archive_name = os.path.split(archive_path)
+        archive_name = archive_name[: archive_name.rfind(".")]
+        if archive_type != config.archive_type:
+            print("wrong archive type")
+            return TestResult(archive_name, len(config.test_files), 0)
         extracted_folder_path = self._unzip_archive_get_extract_folder_path(
             archive_path, config.archive_type
         )
@@ -30,8 +36,7 @@ class HomeworkTester:
         self._copy_working_files_to_project(
             extracted_folder_path, config.working_files, config.homework_name
         )
-        _, archive_name = os.path.split(archive_path)
-        archive_name = archive_name[: archive_name.rfind(".")]
+
         return self._run_tests_and_grade(
             config.test_files, config.homework_name, config.tester_program, archive_name
         )

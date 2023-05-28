@@ -114,10 +114,8 @@ class ClassroomFetcher:
 
         for submission in submissions:
             if (
-                # submission["state"] == "TURNED_IN"
-                # and
-                len(submission["assignmentSubmission"])
-                > 0
+                submission["state"] == "TURNED_IN"
+                and len(submission["assignmentSubmission"]) > 0
             ):
                 user_id = submission["userId"]
                 attachments = submission["assignmentSubmission"].get("attachments", [])
