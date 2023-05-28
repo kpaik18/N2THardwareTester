@@ -1,4 +1,5 @@
 import os.path
+from dataclasses import dataclass
 from typing import List, Protocol
 
 from google.auth.transport.requests import Request
@@ -11,13 +12,19 @@ from googleapiclient.http import MediaIoBaseDownload
 from n2tconfig import DOWNLOAD_FOLDER, GOOGLE_API_CREDENTIALS, GOOGLE_API_TOKENS_PATH
 
 
+@dataclass
+class StudentSubmission:
+    student_id: str
+    submission_id: str
+
+
 class IHomeworkFetcher(Protocol):
-    def get_assignment_submissions(self, course_code: str, coursework_id: str) -> str:
+    def get_assignment_submissions(self, course_code: str, coursework_id: str):
         pass
 
 
 class ClassroomFetcher:
-    def get_assignment_submissions(self, course_code: str, coursework_code: str) -> str:
+    def get_assignment_submissions(self, course_code: str, coursework_code: str):
         creds = self._auth()
         service = build("classroom", "v1", credentials=creds)
         course = self._get_course_by_code(service, course_code)
@@ -25,7 +32,11 @@ class ClassroomFetcher:
         coursework = self._get_coursework_by_course_and_code(
             service, course, coursework_code
         )
-        return self._download_submissions(service, course, coursework)
+
+        homework_folder, student_submissions = self._download_submissions(
+            service, course, coursework
+        )
+        return (homework_folder, student_submissions, course["id"], coursework["id"])
 
     def _get_coursework_by_course_and_code(self, service, course, coursework_code):
         courseworks = (
@@ -112,12 +123,13 @@ class ClassroomFetcher:
         _ = os.path.dirname(download_folder)
         os.makedirs(_, exist_ok=True)
 
+        downloaded_student_submissions = []
+
         for submission in submissions:
             if (
                 submission["state"] == "TURNED_IN"
                 and len(submission["assignmentSubmission"]) > 0
             ):
-                user_id = submission["userId"]
                 attachments = submission["assignmentSubmission"].get("attachments", [])
                 attachment = attachments[0]
                 file_id = attachment["driveFile"]["id"]
@@ -129,9 +141,15 @@ class ClassroomFetcher:
                 request = drive_service.files().get_media(fileId=file_id)
                 filename = os.path.join(download_folder, file_title)
 
+                _ = os.path.dirname(filename)
+                os.makedirs(_, exist_ok=True)
+
                 with open(filename, "wb") as f:
                     downloader = MediaIoBaseDownload(f, request)
                     done = False
                     while done is False:
                         status, done = downloader.next_chunk()
-        return download_folder
+                downloaded_student_submissions.append(
+                    StudentSubmission(submission["userId"], submission["id"])
+                )
+        return download_folder, downloaded_student_submissions
