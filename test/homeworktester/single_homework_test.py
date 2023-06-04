@@ -1,6 +1,7 @@
 import os.path
 
-from configuration.configuration import ConfigurationParser, IConfigurationParser
+from configuration.configuration import (ConfigurationParser,
+                                         IConfigurationParser)
 from homeworktester.homework_tester import HomeworkTester, IHomeworkTester
 from n2tconfig import PROJECT_PATH
 
@@ -13,7 +14,7 @@ def test_valid_homework() -> None:
 
     config_parser: IConfigurationParser = ConfigurationParser()
     config = config_parser.parse_configuration_file(
-        os.path.join(test_archive_folder_path, "config", "hw1.yml")
+        os.path.join(test_archive_folder_path, "config", "h1.yml")
     )
 
     single_tester: IHomeworkTester = HomeworkTester()
@@ -29,7 +30,7 @@ def test_not_valid_and_homework() -> None:
 
     config_parser: IConfigurationParser = ConfigurationParser()
     config = config_parser.parse_configuration_file(
-        os.path.join(test_archive_folder_path, "config", "hw1.yml")
+        os.path.join(test_archive_folder_path, "config", "h1.yml")
     )
 
     single_tester: IHomeworkTester = HomeworkTester()
@@ -46,7 +47,7 @@ def test_not_valid_mux_homework() -> None:
 
     config_parser: IConfigurationParser = ConfigurationParser()
     config = config_parser.parse_configuration_file(
-        os.path.join(test_archive_folder_path, "config", "hw1.yml")
+        os.path.join(test_archive_folder_path, "config", "h1.yml")
     )
 
     single_tester: IHomeworkTester = HomeworkTester()
@@ -65,7 +66,7 @@ def test_without_and_implemented() -> None:
 
     config_parser: IConfigurationParser = ConfigurationParser()
     config = config_parser.parse_configuration_file(
-        os.path.join(test_archive_folder_path, "config", "hw1.yml")
+        os.path.join(test_archive_folder_path, "config", "h1.yml")
     )
 
     single_tester: IHomeworkTester = HomeworkTester()
