@@ -108,7 +108,7 @@ class ClassroomFetcher:
                 file_id = attachment["driveFile"]["id"]
                 file_title = attachment["driveFile"]["title"]
 
-                creds = self._auth()
+                creds = auth_on_google_classroom()
                 drive_service = build("drive", "v3", credentials=creds)
 
                 request = drive_service.files().get_media(fileId=file_id)
