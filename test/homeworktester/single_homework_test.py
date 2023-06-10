@@ -1,7 +1,6 @@
 import os.path
 
-from configuration.configuration import (ConfigurationParser,
-                                         IConfigurationParser)
+from configuration.configuration import ConfigurationParser, IConfigurationParser
 from homeworktester.homework_tester import HomeworkTester, IHomeworkTester
 from n2tconfig import PROJECT_PATH
 

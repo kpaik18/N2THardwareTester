@@ -10,13 +10,11 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload
 
-from configuration.configuration import (ConfigurationParser,
-                                         IConfigurationParser)
+from configuration.configuration import ConfigurationParser, IConfigurationParser
 from fetcher.fetcher import ClassroomFetcher, IHomeworkFetcher
 from grader.grader import ClassroomGrader, IGrader
 from homeworktester.homework_tester import HomeworkTester, IHomeworkTester
-from n2tconfig import (DOWNLOAD_FOLDER, GOOGLE_API_CREDENTIALS,
-                       GOOGLE_API_TOKENS_PATH)
+from n2tconfig import DOWNLOAD_FOLDER, GOOGLE_API_CREDENTIALS, GOOGLE_API_TOKENS_PATH
 
 
 def auth():
