@@ -1,7 +1,10 @@
+import typer
+
 from configuration.configuration import ConfigurationParser, IConfigurationParser
 from fetcher.fetcher import ClassroomFetcher, IHomeworkFetcher
 from grader.grader import ClassroomGrader, IGrader
 from homeworktester.homework_tester import HomeworkTester, IHomeworkTester
+
 
 if __name__ == "__main__":
     fetcher: IHomeworkFetcher = ClassroomFetcher()
