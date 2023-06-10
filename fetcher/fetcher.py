@@ -14,6 +14,7 @@ from n2tconfig import DOWNLOAD_FOLDER
 class StudentSubmission:
     student_id: str
     submission_id: str
+    submission_file_name: str
 
 
 class IHomeworkFetcher(Protocol):
@@ -34,7 +35,13 @@ class ClassroomFetcher:
         homework_folder, student_submissions = self._download_submissions(
             service, course, coursework
         )
-        return (homework_folder, student_submissions, course["id"], coursework["id"])
+        return (
+            homework_folder,
+            student_submissions,
+            course["id"],
+            coursework["id"],
+            course_students,
+        )
 
     def _get_coursework_by_course_and_code(self, service, course, coursework_code):
         courseworks = (
@@ -123,6 +130,10 @@ class ClassroomFetcher:
                     while done is False:
                         status, done = downloader.next_chunk()
                 downloaded_student_submissions.append(
-                    StudentSubmission(submission["userId"], submission["id"])
+                    StudentSubmission(
+                        submission["userId"],
+                        submission["id"],
+                        file_title[: file_title.rfind(".")],
+                    )
                 )
         return download_folder, downloaded_student_submissions
