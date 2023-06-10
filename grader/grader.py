@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import List, Protocol
 
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 
 from authutil.auth_util import auth_on_google_classroom
 from fetcher.fetcher import StudentSubmission
@@ -33,6 +34,7 @@ class ClassroomGrader:
         student_grade_data = self._get_student_grade_data(
             students_data, student_submissions, test_results
         )
+        self._write_student_grades_in_spreadsheet(google_sheet_id, student_grade_data)
 
     def _create_google_sheet(self, drive_folder_id, creds):
         service = build("drive", "v3", credentials=creds)
@@ -72,4 +74,36 @@ class ClassroomGrader:
                     (int)(test_result.passed_count / test_result.full_count * 100),
                 )
             )
-        print(student_grade_data)
+        return student_grade_data
+
+    def _write_student_grades_in_spreadsheet(self, google_sheet_id, student_grade_data):
+        creds = auth_on_google_classroom()
+        try:
+            service = build("sheets", "v4", credentials=creds)
+            values = []
+            for student_data in student_grade_data:
+                row = [
+                    student_data.student_id,
+                    student_data.student_name,
+                    student_data.student_last_name,
+                    student_data.homework_name,
+                    student_data.grade,
+                ]
+                values.append(row)
+            body = {"values": values}
+            result = (
+                service.spreadsheets()
+                .values()
+                .update(
+                    spreadsheetId=google_sheet_id,
+                    range="Sheet1!A1:E",
+                    valueInputOption="RAW",
+                    body=body,
+                )
+                .execute()
+            )
+            print(f"{result.get('updatedCells')} cells updated.")
+            return result
+        except HttpError as error:
+            print(f"An error occurred: {error}")
+            return error
