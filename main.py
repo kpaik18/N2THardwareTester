@@ -1,5 +1,6 @@
 from configuration.configuration import ConfigurationParser, IConfigurationParser
 from fetcher.fetcher import ClassroomFetcher, IHomeworkFetcher
+from grader.grader import ClassroomGrader, IGrader
 from homeworktester.homework_tester import HomeworkTester, IHomeworkTester
 
 if __name__ == "__main__":
@@ -20,3 +21,10 @@ if __name__ == "__main__":
     tester: IHomeworkTester = HomeworkTester()
     test_results = tester.test_homework_folder(homework_folder, config)
     print(test_results)
+    grader: IGrader = ClassroomGrader()
+    grader.grade_homework(
+        course_students,
+        student_submissions,
+        test_results,
+        "15jXXLvv4yTthiHvqEwJM3hcex--iEvOu",
+    )

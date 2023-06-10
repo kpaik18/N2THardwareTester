@@ -105,6 +105,8 @@ class ClassroomFetcher:
 
         downloaded_student_submissions = []
 
+        creds = auth_on_google_classroom()
+        drive_service = build("drive", "v3", credentials=creds)
         for submission in submissions:
             if (
                 submission["state"] == "TURNED_IN"
@@ -114,9 +116,6 @@ class ClassroomFetcher:
                 attachment = attachments[0]
                 file_id = attachment["driveFile"]["id"]
                 file_title = attachment["driveFile"]["title"]
-
-                creds = auth_on_google_classroom()
-                drive_service = build("drive", "v3", credentials=creds)
 
                 request = drive_service.files().get_media(fileId=file_id)
                 filename = os.path.join(download_folder, file_title)

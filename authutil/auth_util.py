@@ -16,6 +16,7 @@ def auth_on_google_classroom():
         "https://www.googleapis.com/auth/classroom.coursework.students",
         "https://www.googleapis.com/auth/classroom.rosters",
         "https://www.googleapis.com/auth/drive.readonly",
+        "https://www.googleapis.com/auth/drive.file",
     ]
     creds = None
     if os.path.exists(tokens_path):
