@@ -17,7 +17,7 @@ if __name__ == "__main__":
     print(coursework_id)
     print(course_students)
     config_parser: IConfigurationParser = ConfigurationParser()
-    config = config_parser.parse_configuration_file("h1.yml")
+    config = config_parser.parse_configuration_file("cmd/config_files/h1.yml")
     tester: IHomeworkTester = HomeworkTester()
     test_results = tester.test_homework_folder(homework_folder, config)
     print(test_results)

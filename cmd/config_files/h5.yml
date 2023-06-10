@@ -1,0 +1,17 @@
+homework_name: '05'
+archive_type: zip
+working_files:
+  - Memory.hdl
+  - CPU.hdl
+  - Computer.hdl
+test_files:
+  - Memory.tst
+  - CPU.tst
+  - CPU-external.tst
+  - ComputerRect.tst
+  - ComputerRect-external.tst
+  - ComputerMax.tst
+  - ComputerMax-external.tst
+  - ComputerAdd.tst
+  - ComputerAdd-external.tst
+tester_program: HardwareSimulator

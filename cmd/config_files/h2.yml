@@ -1,0 +1,16 @@
+homework_name: '02'
+archive_type: zip
+working_files:
+  - HalfAdder.hdl
+  - FullAdder.hdl
+  - Add16.hdl
+  - Inc16.hdl
+  - ALU.hdl
+test_files:
+  - HalfAdder.tst
+  - FullAdder.tst
+  - Add16.tst
+  - Inc16.tst
+  - ALU-nostat.tst
+  - ALU.tst
+tester_program: HardwareSimulator

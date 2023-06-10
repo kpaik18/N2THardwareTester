@@ -1,0 +1,21 @@
+homework_name: '03'
+archive_type: zip
+working_files:
+  - a/Register.hdl
+  - a/RAM8.hdl
+  - a/RAM64.hdl
+  - a/PC.hdl
+  - a/Bit.hdl
+  - b/RAM512.hdl
+  - b/RAM4K.hdl
+  - b/RAM16K.hdl
+test_files:
+  - a/Register.tst
+  - a/RAM8.tst
+  - a/RAM64.tst
+  - a/PC.tst
+  - a/Bit.tst
+  - b/RAM512.tst
+  - b/RAM4k.tst
+  - b/RAM16K.tst
+tester_program: HardwareSimulator

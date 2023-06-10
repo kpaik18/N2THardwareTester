@@ -1,0 +1,9 @@
+homework_name: '04'
+archive_type: zip
+working_files:
+  - fill/Fill.asm
+  - mult/Mult.asm
+test_files:
+  - fill/Fill.tst
+  - mult/Mult.tst
+tester_program: CPUEmulator

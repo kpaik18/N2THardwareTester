@@ -109,6 +109,7 @@ class ClassroomFetcher:
         drive_service = build("drive", "v3", credentials=creds)
         for submission in submissions:
             if (
+                # todo - uncomment this
                 # submission["state"] == "TURNED_IN"
                 # and
                 len(submission["assignmentSubmission"])
