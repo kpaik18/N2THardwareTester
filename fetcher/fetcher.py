@@ -109,8 +109,10 @@ class ClassroomFetcher:
         drive_service = build("drive", "v3", credentials=creds)
         for submission in submissions:
             if (
-                submission["state"] == "TURNED_IN"
-                and len(submission["assignmentSubmission"]) > 0
+                # submission["state"] == "TURNED_IN"
+                # and
+                len(submission["assignmentSubmission"])
+                > 0
             ):
                 attachments = submission["assignmentSubmission"].get("attachments", [])
                 attachment = attachments[0]

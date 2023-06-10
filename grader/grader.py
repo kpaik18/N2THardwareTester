@@ -61,15 +61,21 @@ class ClassroomGrader:
             test_result: TestResult = test_result_dict[
                 student_submission.submission_file_name
             ]
+            family_name = ""
+            if (
+                "familyName"
+                in student_data_dict[student_submission.student_id]["profile"]["name"]
+            ):
+                family_name = student_data_dict[student_submission.student_id][
+                    "profile"
+                ]["name"]["familyName"]
             student_grade_data.append(
                 StudentGradeData(
                     student_submission.student_id,
                     student_data_dict[student_submission.student_id]["profile"]["name"][
                         "givenName"
                     ],
-                    student_data_dict[student_submission.student_id]["profile"]["name"][
-                        "familyName"
-                    ],
+                    family_name,
                     student_submission.submission_file_name,
                     (int)(test_result.passed_count / test_result.full_count * 100),
                 )

@@ -11,7 +11,7 @@ if __name__ == "__main__":
         course_id,
         coursework_id,
         course_students,
-    ) = fetcher.get_assignment_submissions("NjEyMDE2MDkyOTky", "NjEyMDE1OTg3ODg3")
+    ) = fetcher.get_assignment_submissions("NTk1MzUxNTE3MjE4", "NTk1MzU1MjI4NzU0")
     print(student_submissions)
     print(course_id)
     print(coursework_id)
