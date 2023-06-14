@@ -15,6 +15,7 @@ class StudentSubmission:
     student_id: str
     submission_id: str
     submission_file_name: str
+    update_time: str
 
 
 class IHomeworkFetcher(Protocol):
@@ -136,6 +137,7 @@ class ClassroomFetcher:
                         submission["userId"],
                         submission["id"],
                         file_title[: file_title.rfind(".")],
+                        submission["updateTime"],
                     )
                 )
         return download_folder, downloaded_student_submissions

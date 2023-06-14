@@ -52,6 +52,7 @@ def grade_homework(
         coursework_id,
         course_students,
     ) = fetcher.get_assignment_submissions(course_code, coursework_code)
+    print(student_submissions)
     config_parser: IConfigurationParser = ConfigurationParser()
     config = config_parser.parse_configuration_file(get_config_file_path(h))
     tester: IHomeworkTester = HomeworkTester()
