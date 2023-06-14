@@ -4,6 +4,6 @@ working_files:
   - fill/Fill.asm
   - mult/Mult.asm
 test_files:
-  - fill/Fill.tst
+  - fill/FillAutomatic.tst
   - mult/Mult.tst
 tester_program: CPUEmulator

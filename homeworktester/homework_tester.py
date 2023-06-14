@@ -84,9 +84,15 @@ class HomeworkTester:
         for w_file in working_files:
             w_file_path = os.path.join(extracted_folder_path, w_file)
             if not os.path.exists(w_file_path):
+                os.makedirs(os.path.dirname(w_file_path), exist_ok=True)
                 with open(w_file_path, "w") as f:
                     pass
-            shutil.copy(w_file_path, hw_project_path)
+            to_copy_path = hw_project_path
+            if "/" in w_file:
+                to_copy_path = os.path.join(to_copy_path, w_file[: w_file.rfind("/")])
+            if "\\" in w_file:
+                to_copy_path = os.path.join(to_copy_path, w_file[: w_file.rfind("\\")])
+            shutil.copy(w_file_path, to_copy_path)
 
     def _run_tests_and_grade(
         self, test_files, homework_name, tester_program, archive_name

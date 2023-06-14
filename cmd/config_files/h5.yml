@@ -5,7 +5,6 @@ working_files:
   - CPU.hdl
   - Computer.hdl
 test_files:
-  - Memory.tst
   - CPU.tst
   - CPU-external.tst
   - ComputerRect.tst

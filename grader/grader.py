@@ -11,7 +11,12 @@ from homeworktester.test_result import TestResult
 
 class IGrader(Protocol):
     def grade_homework(
-        self, students_data, student_submissions, test_results, drive_folder_id
+        self,
+        homework_name,
+        students_data,
+        student_submissions,
+        test_results,
+        drive_folder_id,
     ):
         pass
 
@@ -27,19 +32,26 @@ class StudentGradeData:
 
 class ClassroomGrader:
     def grade_homework(
-        self, students_data, student_submissions, test_results, drive_folder_id
+        self,
+        homework_name,
+        students_data,
+        student_submissions,
+        test_results,
+        drive_folder_id,
     ):
         creds = auth_on_google_classroom()
-        google_sheet_id = self._create_google_sheet(drive_folder_id, creds)
+        google_sheet_id = self._create_google_sheet(
+            drive_folder_id, homework_name, creds
+        )
         student_grade_data = self._get_student_grade_data(
             students_data, student_submissions, test_results
         )
         self._write_student_grades_in_spreadsheet(google_sheet_id, student_grade_data)
 
-    def _create_google_sheet(self, drive_folder_id, creds):
+    def _create_google_sheet(self, drive_folder_id, homework_name, creds):
         service = build("drive", "v3", credentials=creds)
         file_metadata = {
-            "name": "My Spreadsheet",
+            "name": homework_name + "-grades",
             "mimeType": "application/vnd.google-apps.spreadsheet",
             "parents": [drive_folder_id],
         }
