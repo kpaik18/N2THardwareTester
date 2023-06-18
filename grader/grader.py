@@ -17,6 +17,8 @@ class IGrader(Protocol):
         student_submissions,
         test_results,
         drive_folder_id,
+        coursework_due_date,
+        coursework_due_time,
     ):
         pass
 
@@ -38,6 +40,8 @@ class ClassroomGrader:
         student_submissions,
         test_results,
         drive_folder_id,
+        coursework_due_date,
+        coursework_due_time,
     ):
         creds = auth_on_google_classroom()
         google_sheet_id = self._create_google_sheet(

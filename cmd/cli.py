@@ -51,6 +51,8 @@ def grade_homework(
         course_id,
         coursework_id,
         course_students,
+        coursework_due_date,
+        coursework_due_time,
     ) = fetcher.get_assignment_submissions(course_code, coursework_code)
     print(student_submissions)
     config_parser: IConfigurationParser = ConfigurationParser()
@@ -64,4 +66,6 @@ def grade_homework(
         student_submissions,
         test_results,
         drive_folder_url_code,
+        coursework_due_date,
+        coursework_due_time,
     )

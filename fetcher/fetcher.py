@@ -42,6 +42,8 @@ class ClassroomFetcher:
             course["id"],
             coursework["id"],
             course_students,
+            coursework["dueDate"],
+            coursework["dueTime"],
         )
 
     def _get_coursework_by_course_and_code(self, service, course, coursework_code):
@@ -132,12 +134,24 @@ class ClassroomFetcher:
                     done = False
                     while done is False:
                         status, done = downloader.next_chunk()
+                turn_in_time = self._get_turn_in_time_from_submission(submission)
                 downloaded_student_submissions.append(
                     StudentSubmission(
                         submission["userId"],
                         submission["id"],
                         file_title[: file_title.rfind(".")],
-                        submission["updateTime"],
+                        turn_in_time,
                     )
                 )
         return download_folder, downloaded_student_submissions
+
+    def _get_turn_in_time_from_submission(self, submission):
+        submission_history = submission["submissionHistory"]
+        last_turned_in_state = None
+        for submission_event in reversed(submission_history):
+            if (
+                "stateHistory" in submission_event
+                and submission_event["stateHistory"]["state"] == "TURNED_IN"
+            ):
+                last_turned_in_state = submission_event
+        return last_turned_in_state["stateHistory"]["stateTimestamp"]
