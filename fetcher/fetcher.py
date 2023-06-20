@@ -15,7 +15,7 @@ class StudentSubmission:
     student_id: str
     submission_id: str
     submission_file_name: str
-    update_time: str
+    turn_in_timestamp: str
 
 
 class IHomeworkFetcher(Protocol):

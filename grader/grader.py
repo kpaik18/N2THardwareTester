@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 from typing import List, Protocol
 
 from googleapiclient.discovery import build
@@ -30,6 +31,7 @@ class StudentGradeData:
     student_last_name: str
     homework_name: str
     grade: int
+    late_days: int
 
 
 class ClassroomGrader:
@@ -43,12 +45,19 @@ class ClassroomGrader:
         coursework_due_date,
         coursework_due_time,
     ):
+        coursework_due_timestamp = datetime(
+            coursework_due_date["year"],
+            coursework_due_date["month"],
+            coursework_due_date["day"],
+            coursework_due_time["hours"],
+            coursework_due_time["minutes"] if "minutes" in coursework_due_time else 0,
+        )
         creds = auth_on_google_classroom()
         google_sheet_id = self._create_google_sheet(
             drive_folder_id, homework_name, creds
         )
         student_grade_data = self._get_student_grade_data(
-            students_data, student_submissions, test_results
+            students_data, student_submissions, test_results, coursework_due_timestamp
         )
         self._write_student_grades_in_spreadsheet(google_sheet_id, student_grade_data)
 
@@ -67,6 +76,7 @@ class ClassroomGrader:
         students_data,
         student_submissions: List[StudentSubmission],
         test_results: List[TestResult],
+        coursework_due_timestamp,
     ):
         test_result_dict = {
             test_result.name: test_result for test_result in test_results
@@ -94,6 +104,9 @@ class ClassroomGrader:
                     family_name,
                     student_submission.submission_file_name,
                     (int)(test_result.passed_count / test_result.full_count * 100),
+                    self._get_late_days(
+                        student_submission.turn_in_timestamp, coursework_due_timestamp
+                    ),
                 )
             )
         return student_grade_data
@@ -110,6 +123,7 @@ class ClassroomGrader:
                     student_data.student_last_name,
                     student_data.homework_name,
                     student_data.grade,
+                    student_data.late_days,
                 ]
                 values.append(row)
             body = {"values": values}
@@ -118,7 +132,7 @@ class ClassroomGrader:
                 .values()
                 .update(
                     spreadsheetId=google_sheet_id,
-                    range="Sheet1!A1:E",
+                    range="Sheet1!A1:F",
                     valueInputOption="RAW",
                     body=body,
                 )
@@ -129,3 +143,11 @@ class ClassroomGrader:
         except HttpError as error:
             print(f"An error occurred: {error}")
             return error
+
+    def _get_late_days(self, turn_in_timestamp_str, coursework_due_timestamp):
+        turn_in_timestamp_str = turn_in_timestamp_str.rstrip("Z")
+        turn_in_timestamp = datetime.fromisoformat(turn_in_timestamp_str)
+        is_late = turn_in_timestamp > coursework_due_timestamp
+        if not is_late:
+            return 0
+        return (turn_in_timestamp - coursework_due_timestamp).days + 1
