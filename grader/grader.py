@@ -20,6 +20,7 @@ class IGrader(Protocol):
         drive_folder_id,
         coursework_due_date,
         coursework_due_time,
+        late_days,
     ):
         pass
 
@@ -32,6 +33,7 @@ class StudentGradeData:
     homework_name: str
     grade: int
     late_days: int
+    grade_after_late_days: int
 
 
 class ClassroomGrader:
@@ -44,6 +46,7 @@ class ClassroomGrader:
         drive_folder_id,
         coursework_due_date,
         coursework_due_time,
+        late_days,
     ):
         coursework_due_timestamp = datetime(
             coursework_due_date["year"],
@@ -57,7 +60,11 @@ class ClassroomGrader:
             drive_folder_id, homework_name, creds
         )
         student_grade_data = self._get_student_grade_data(
-            students_data, student_submissions, test_results, coursework_due_timestamp
+            students_data,
+            student_submissions,
+            test_results,
+            coursework_due_timestamp,
+            late_days,
         )
         self._write_student_grades_in_spreadsheet(google_sheet_id, student_grade_data)
 
@@ -77,6 +84,7 @@ class ClassroomGrader:
         student_submissions: List[StudentSubmission],
         test_results: List[TestResult],
         coursework_due_timestamp,
+        late_days,
     ):
         test_result_dict = {
             test_result.name: test_result for test_result in test_results
@@ -95,6 +103,15 @@ class ClassroomGrader:
                 family_name = student_data_dict[student_submission.student_id][
                     "profile"
                 ]["name"]["familyName"]
+            grade_for_submission = (int)(
+                test_result.passed_count / test_result.full_count * 100
+            )
+            late_days_for_submission = self._get_late_days(
+                student_submission.turn_in_timestamp, coursework_due_timestamp
+            )
+            grade_after_late_days = self._calculate_grade_after_late_days(
+                grade_for_submission, late_days_for_submission, late_days
+            )
             student_grade_data.append(
                 StudentGradeData(
                     student_submission.student_id,
@@ -103,10 +120,9 @@ class ClassroomGrader:
                     ],
                     family_name,
                     student_submission.submission_file_name,
-                    (int)(test_result.passed_count / test_result.full_count * 100),
-                    self._get_late_days(
-                        student_submission.turn_in_timestamp, coursework_due_timestamp
-                    ),
+                    grade_for_submission,
+                    late_days_for_submission,
+                    grade_after_late_days,
                 )
             )
         return student_grade_data
@@ -124,6 +140,7 @@ class ClassroomGrader:
                     student_data.homework_name,
                     student_data.grade,
                     student_data.late_days,
+                    student_data.grade_after_late_days,
                 ]
                 values.append(row)
             body = {"values": values}
@@ -132,7 +149,7 @@ class ClassroomGrader:
                 .values()
                 .update(
                     spreadsheetId=google_sheet_id,
-                    range="Sheet1!A1:F",
+                    range="Sheet1!A1:G",
                     valueInputOption="RAW",
                     body=body,
                 )
@@ -145,9 +162,21 @@ class ClassroomGrader:
             return error
 
     def _get_late_days(self, turn_in_timestamp_str, coursework_due_timestamp):
+        if turn_in_timestamp_str is None:
+            return 99999
         turn_in_timestamp_str = turn_in_timestamp_str.rstrip("Z")
         turn_in_timestamp = datetime.fromisoformat(turn_in_timestamp_str)
         is_late = turn_in_timestamp > coursework_due_timestamp
         if not is_late:
             return 0
         return (turn_in_timestamp - coursework_due_timestamp).days + 1
+
+    def _calculate_grade_after_late_days(
+        self, grade_for_submission, late_days_for_submission, late_days
+    ):
+        if late_days_for_submission <= 0:
+            return grade_for_submission
+        for late_day in late_days:
+            if late_day.day_count == late_days_for_submission:
+                return grade_for_submission * (1 - late_day.percentage_loss * 0.01)
+        return 0

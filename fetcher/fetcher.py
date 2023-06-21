@@ -154,4 +154,6 @@ class ClassroomFetcher:
                 and submission_event["stateHistory"]["state"] == "TURNED_IN"
             ):
                 last_turned_in_state = submission_event
+        if last_turned_in_state is None:
+            return None
         return last_turned_in_state["stateHistory"]["stateTimestamp"]
