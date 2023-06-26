@@ -28,11 +28,6 @@ class LateDay:
     percentage_loss: int
 
 
-@app.command()
-def dummy_command():
-    print("dummy")
-
-
 def get_config_file_path(h: Homework):
     return os.path.join(PROJECT_PATH, "cmd/config_files/" + h.value + ".yml")
 
