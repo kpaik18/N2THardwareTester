@@ -1,15 +1,13 @@
-import os
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
 
 import typer
+import pkg_resources
 
 from configuration.configuration import ConfigurationParser, IConfigurationParser
 from fetcher.fetcher import ClassroomFetcher, IHomeworkFetcher
 from grader.grader import ClassroomGrader, IGrader
 from homeworktester.homework_tester import HomeworkTester, IHomeworkTester
-from n2tconfig import PROJECT_PATH
 
 app = typer.Typer()
 
@@ -29,7 +27,8 @@ class LateDay:
 
 
 def get_config_file_path(h: Homework):
-    return os.path.join(PROJECT_PATH, "cmd/config_files/" + h.value + ".yml")
+    data_path = pkg_resources.resource_filename(__name__, "data/" + h.value + ".yml")
+    return data_path
 
 
 @app.command()
@@ -67,11 +66,11 @@ def get_late_days(late_day_percentages):
 
 @app.command()
 def grade_homework(
-    h: Homework,
-    course_code: str,
-    coursework_code: str,
-    drive_folder_url_code: str,
-    late_day_percentages: list[int],
+        h: Homework,
+        course_code: str,
+        coursework_code: str,
+        drive_folder_url_code: str,
+        late_day_percentages: list[int],
 ):
     late_days = get_late_days(late_day_percentages)
     fetcher: IHomeworkFetcher = ClassroomFetcher()
