@@ -18,4 +18,8 @@ setup(
             "n2t-test=n2t_hardware_tester.main:app",
         ],
     },
+    package_data={
+        'n2t_hardware_tester': ['cmdi/data/*.yml'],
+    },
+    include_package_data=True,
 )

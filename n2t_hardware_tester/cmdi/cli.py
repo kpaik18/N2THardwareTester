@@ -1,7 +1,7 @@
 import os
 from dataclasses import dataclass
 from enum import Enum
-
+import pkg_resources
 import typer
 
 from n2t_hardware_tester.configuration.configuration import (
@@ -34,7 +34,9 @@ class LateDay:
 
 
 def get_config_file_path(h: Homework):
-    return os.path.join(PROJECT_PATH, "cmdi/config_files/" + h.value + ".yml")
+    data_path = pkg_resources.resource_filename(__name__, "data/" + h.value + ".yml")
+    return data_path
+    # return os.path.join(PROJECT_PATH, "cmdi/data/" + h.value + ".yml")
 
 
 @app.command()
