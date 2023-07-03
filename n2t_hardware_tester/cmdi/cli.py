@@ -36,7 +36,6 @@ class LateDay:
 def get_config_file_path(h: Homework):
     data_path = pkg_resources.resource_filename(__name__, "data/" + h.value + ".yml")
     return data_path
-    # return os.path.join(PROJECT_PATH, "cmdi/data/" + h.value + ".yml")
 
 
 @app.command()
