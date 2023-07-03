@@ -4,11 +4,17 @@ from enum import Enum
 
 import typer
 
-from configuration.configuration import ConfigurationParser, IConfigurationParser
-from fetcher.fetcher import ClassroomFetcher, IHomeworkFetcher
-from grader.grader import ClassroomGrader, IGrader
-from homeworktester.homework_tester import HomeworkTester, IHomeworkTester
-from n2tconfig import PROJECT_PATH
+from n2t_hardware_tester.configuration.configuration import (
+    ConfigurationParser,
+    IConfigurationParser,
+)
+from n2t_hardware_tester.fetcher.fetcher import ClassroomFetcher, IHomeworkFetcher
+from n2t_hardware_tester.grader.grader import ClassroomGrader, IGrader
+from n2t_hardware_tester.homeworktester.homework_tester import (
+    HomeworkTester,
+    IHomeworkTester,
+)
+from n2t_hardware_tester.n2tconfig import PROJECT_PATH
 
 app = typer.Typer()
 

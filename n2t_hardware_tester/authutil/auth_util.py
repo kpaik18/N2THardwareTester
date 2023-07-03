@@ -5,7 +5,7 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
-from n2tconfig import GOOGLE_API_CREDENTIALS, GOOGLE_API_TOKENS_PATH
+from n2t_hardware_tester.n2tconfig import GOOGLE_API_CREDENTIALS, GOOGLE_API_TOKENS_PATH
 
 
 def auth_on_google_classroom():

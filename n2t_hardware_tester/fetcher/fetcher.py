@@ -6,8 +6,8 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload
 
-from authutil.auth_util import auth_on_google_classroom
-from n2tconfig import DOWNLOAD_FOLDER
+from n2t_hardware_tester.authutil.auth_util import auth_on_google_classroom
+from n2t_hardware_tester.n2tconfig import DOWNLOAD_FOLDER
 
 
 @dataclass

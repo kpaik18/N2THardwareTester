@@ -4,9 +4,9 @@ import subprocess
 import zipfile
 from typing import List, Protocol
 
-from configuration.configuration import Configuration
-from homeworktester.test_result import TestResult
-from n2tconfig import N2T_WORK_AREA_PATH, TEST_SUCCESS
+from n2t_hardware_tester.configuration.configuration import Configuration
+from n2t_hardware_tester.homeworktester.test_result import TestResult
+from n2t_hardware_tester.n2tconfig import N2T_WORK_AREA_PATH, TEST_SUCCESS
 
 
 class IHomeworkTester(Protocol):

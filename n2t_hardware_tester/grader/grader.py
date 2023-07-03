@@ -5,9 +5,9 @@ from typing import List, Protocol
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-from authutil.auth_util import auth_on_google_classroom
-from fetcher.fetcher import StudentSubmission
-from homeworktester.test_result import TestResult
+from n2t_hardware_tester.authutil.auth_util import auth_on_google_classroom
+from n2t_hardware_tester.fetcher.fetcher import StudentSubmission
+from n2t_hardware_tester.homeworktester.test_result import TestResult
 
 
 class IGrader(Protocol):

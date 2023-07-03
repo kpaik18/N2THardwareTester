@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="n2t-hardware-tester",
@@ -15,7 +15,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "n2t-test=n2t_hardware_tester.main:tester_app",
+            "n2t-test=n2t_hardware_tester.main:app",
         ],
     },
 )

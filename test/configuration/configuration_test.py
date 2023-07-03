@@ -1,5 +1,4 @@
 import pytest
-
 from configuration.configuration import ConfigurationParser, IConfigurationParser
 from n2tconfig import PROJECT_PATH
 
