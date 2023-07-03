@@ -1,5 +1,7 @@
 import typer
 
+from n2t_hardware_tester.test_pack.test import test_function
+
 tester_app = typer.Typer()
 
 
@@ -11,6 +13,7 @@ def dummy_command():
 @tester_app.command()
 def other_command():
     print("other")
+    test_function()
 
 
 if __name__ == "__main__":
