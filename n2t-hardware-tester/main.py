@@ -1,4 +1,4 @@
-from cmd.cli import Homework, app, grade_homework
+from cmd.cli import app
 
 if __name__ == "__main__":
     app()
