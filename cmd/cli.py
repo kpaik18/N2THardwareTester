@@ -8,6 +8,7 @@ from configuration.configuration import ConfigurationParser, IConfigurationParse
 from fetcher.fetcher import ClassroomFetcher, IHomeworkFetcher
 from grader.grader import ClassroomGrader, IGrader
 from homeworktester.homework_tester import HomeworkTester, IHomeworkTester
+from n2tconfig import env_variables_for_student, env_variable_description, env_variables_for_lecturer
 
 app = typer.Typer()
 
@@ -33,6 +34,13 @@ def get_config_file_path(h: Homework):
 
 @app.command()
 def test_homework(h: Homework, zip_file_path: str):
+    student_variable_vars = env_variables_for_student
+    for var in student_variable_vars:
+        if var is None:
+            print(var + " must be set in environment variables")
+            print(env_variable_description[var])
+            return
+
     homework_tester: IHomeworkTester = HomeworkTester()
     config_parser: IConfigurationParser = ConfigurationParser()
     result = homework_tester.test_homework(
@@ -72,6 +80,12 @@ def grade_homework(
         drive_folder_url_code: str,
         late_day_percentages: list[int],
 ):
+    lecture_variable_vars = env_variables_for_lecturer
+    for var in lecture_variable_vars:
+        if var is None:
+            print(var + " must be set in environment variables")
+            print(env_variable_description[var])
+            return
     late_days = get_late_days(late_day_percentages)
     fetcher: IHomeworkFetcher = ClassroomFetcher()
     (
