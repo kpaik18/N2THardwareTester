@@ -1,20 +1,15 @@
-import os
 from dataclasses import dataclass
 from enum import Enum
-import pkg_resources
-import typer
 
-from n2t_hardware_tester.configuration.configuration import (
-    ConfigurationParser,
-    IConfigurationParser,
-)
+import typer
+import pkg_resources
+
+from n2t_hardware_tester.configuration.configuration import ConfigurationParser, IConfigurationParser
 from n2t_hardware_tester.fetcher.fetcher import ClassroomFetcher, IHomeworkFetcher
 from n2t_hardware_tester.grader.grader import ClassroomGrader, IGrader
-from n2t_hardware_tester.homeworktester.homework_tester import (
-    HomeworkTester,
-    IHomeworkTester,
-)
-from n2t_hardware_tester.n2tconfig import PROJECT_PATH
+from n2t_hardware_tester.homeworktester.homework_tester import IHomeworkTester, HomeworkTester
+from n2t_hardware_tester.n2tconfig import env_variables_for_student, env_variable_description, \
+    env_variables_for_lecturer
 
 app = typer.Typer()
 
@@ -40,6 +35,13 @@ def get_config_file_path(h: Homework):
 
 @app.command()
 def test_homework(h: Homework, zip_file_path: str):
+    student_variable_vars = env_variables_for_student
+    for var in student_variable_vars:
+        if var is None:
+            print(var + " must be set in environment variables")
+            print(env_variable_description[var])
+            return
+
     homework_tester: IHomeworkTester = HomeworkTester()
     config_parser: IConfigurationParser = ConfigurationParser()
     result = homework_tester.test_homework(
@@ -73,12 +75,18 @@ def get_late_days(late_day_percentages):
 
 @app.command()
 def grade_homework(
-    h: Homework,
-    course_code: str,
-    coursework_code: str,
-    drive_folder_url_code: str,
-    late_day_percentages: list[int],
+        h: Homework,
+        course_code: str,
+        coursework_code: str,
+        drive_folder_url_code: str,
+        late_day_percentages: list[int],
 ):
+    lecture_variable_vars = env_variables_for_lecturer
+    for var in lecture_variable_vars:
+        if var is None:
+            print(var + " must be set in environment variables")
+            print(env_variable_description[var])
+            return
     late_days = get_late_days(late_day_percentages)
     fetcher: IHomeworkFetcher = ClassroomFetcher()
     (
