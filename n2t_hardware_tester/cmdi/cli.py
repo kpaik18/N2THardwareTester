@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from enum import Enum
 
-import typer
 import pkg_resources
+import typer
 
 from n2t_hardware_tester.configuration.configuration import ConfigurationParser, IConfigurationParser
 from n2t_hardware_tester.fetcher.fetcher import ClassroomFetcher, IHomeworkFetcher
@@ -36,11 +36,14 @@ def get_config_file_path(h: Homework):
 @app.command()
 def test_homework(h: Homework, zip_file_path: str):
     student_variable_vars = env_variables_for_student
+    counter = 0
     for var in student_variable_vars:
         if var is None:
-            print(var + " must be set in environment variables")
-            print(env_variable_description[var])
+            var_name = env_variable_names[counter]
+            print("INFO: [" + var_name + "] must be set in environment variables")
+            print("INFO: [" + var_name + "] --> " + env_variable_description[var_name])
             return
+        counter += 1
 
     homework_tester: IHomeworkTester = HomeworkTester()
     config_parser: IConfigurationParser = ConfigurationParser()
@@ -82,11 +85,14 @@ def grade_homework(
         late_day_percentages: list[int],
 ):
     lecture_variable_vars = env_variables_for_lecturer
+    counter = 0
     for var in lecture_variable_vars:
         if var is None:
-            print(var + " must be set in environment variables")
-            print(env_variable_description[var])
+            var_name = env_variable_names[counter]
+            print("INFO: [" + var_name + "] must be set in environment variables")
+            print("INFO: [" + var_name + "] --> " + env_variable_description[var_name])
             return
+        counter += 1
     late_days = get_late_days(late_day_percentages)
     fetcher: IHomeworkFetcher = ClassroomFetcher()
     (
@@ -113,3 +119,50 @@ def grade_homework(
         coursework_due_time,
         late_days,
     )
+
+
+@app.callback()
+def main_callback(ctx: typer.Context):
+    """
+    Command Line Application to test nand2tetris hardware homeworks
+
+    Commands for students who want to check their archived homework
+
+    1. n2t-test test-homework[command] homework[argument] zip_file_address[argument]
+
+    - homework [values from list -> (h1, h2, h3, h4, h5)]
+    - zip_file_address [path of your zipped homework on your machine]
+
+    env variables for students
+
+    - n2t_work_area_path - path of nand2tetris folder which contains tools and project directories
+
+
+
+    Commands for lecturers or assistants to grade student assignments
+
+    1. n2t-test grage-homework[command] homework[argument]
+                                        course_code[argument]
+                                        coursework_code[argument]
+                                        drive_folder_id[argument]
+                                        late_days_percentages[argument]
+
+    - homework [values from list -> (h1, h2, h3, h4, h5)]
+    - course_code - can be found in url of classroom
+    - coursework_code - can be found in url of classroom assignment
+    - drive_folder_id - can be found in url of drive folder
+    - late_days_percentages - [late_day_count] [percentage_loss] [late_day_count] [percentage_loss] ...
+                              for example: 1 20 2 50 - means that for one late day student loses 20%,
+                                                       for 2 late days student loses 50%,
+                                                       any more late days than 2 - student loses 100%,
+                              if late days is not allowed just give - "1 100" as an argument
+
+    env variables for lecturers or assistants
+
+    - n2t_work_area_path - path of nand2tetris folder which contains tools and project directories
+    - n2t_google_api_credentials - api credentials path for google cloud console project
+    - n2t_google_api_tokens_path - path for api tokens path, no need to add token file,
+                                   it will be generated automatically after login
+    - n2t_homework_files_download_folder - path of folder, where student assignments will be downloaded
+
+    """
