@@ -10,11 +10,13 @@ DOWNLOAD_FOLDER: str = os.getenv("n2t_homework_files_download_folder")  # type: 
 env_variables_for_student = [N2T_WORK_AREA_PATH]
 env_variables_for_lecturer = [N2T_WORK_AREA_PATH, GOOGLE_API_CREDENTIALS, GOOGLE_API_TOKENS_PATH, DOWNLOAD_FOLDER]
 
+env_variable_names = ['n2t_work_area_path', 'n2t_google_api_credentials', 'n2t_google_api_tokens_path', 'n2t_homework_files_download_folder']
+
 env_variable_description = {
-    N2T_WORK_AREA_PATH: """Path of nand2tetris directory which contains tools and project folder for the course, 
+    "n2t_work_area_path": """Path of nand2tetris directory which contains tools and project folder for the course, 
     for example -> C:/Users/StudentName/nand2tetris
     """,
-    GOOGLE_API_CREDENTIALS: "path of google classroom api Credentials file for google authentication, must be downloaded from google cloud console",
-    GOOGLE_API_TOKENS_PATH: "path of google classroom api token path. token file is not necessary, will be downloaded automatically after login",
-    DOWNLOAD_FOLDER: "path of download folder, where student assignment attachments will be downloaded",
+    'n2t_google_api_credentials': "path of google classroom api Credentials file for google authentication, must be downloaded from google cloud console",
+    'n2t_google_api_tokens_path': "path of google classroom api token path. token file is not necessary, will be downloaded automatically after login",
+    'n2t_homework_files_download_folder': "path of download folder, where student assignment attachments will be downloaded",
 }
