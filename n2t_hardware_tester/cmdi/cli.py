@@ -9,7 +9,7 @@ from n2t_hardware_tester.fetcher.fetcher import ClassroomFetcher, IHomeworkFetch
 from n2t_hardware_tester.grader.grader import ClassroomGrader, IGrader
 from n2t_hardware_tester.homeworktester.homework_tester import IHomeworkTester, HomeworkTester
 from n2t_hardware_tester.n2tconfig import env_variables_for_student, env_variable_description, \
-    env_variables_for_lecturer
+    env_variables_for_lecturer, env_variable_names
 
 app = typer.Typer()
 
