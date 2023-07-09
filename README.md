@@ -19,7 +19,7 @@ homework should be one of the following values: h1, h2, h3, h4, h5.
 
 zip_file_address should be the path to the zipped homework file on the student's machine.
 
-# Environment Variables for Students
+## Environment Variables for Students
 n2t_work_area_path: Path of the nand2tetris folder that contains tools and project directories.
 
 # Commands for Lecturers or Assistants
@@ -38,7 +38,7 @@ drive_folder_id can be found in the URL of the Google Drive folder.
 
 late_days_percentages should be provided as a series of pairs: [late_day_count] [percentage_loss], separated by spaces. For example, "1 20 2 50" means that for one late day, the student loses 20%, and for two late days, the student loses 50%. If late days are not allowed, use "1 100" as the argument.
 
-# Environment Variables for Lecturers or Assistants
+## Environment Variables for Lecturers or Assistants
 
 n2t_work_area_path: Path of the nand2tetris folder that contains tools and project directories.
 
