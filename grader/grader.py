@@ -178,5 +178,5 @@ class ClassroomGrader:
             return grade_for_submission
         for late_day in late_days:
             if late_day.day_count == late_days_for_submission:
-                return grade_for_submission - late_day.percentage_loss
+                return max(0, grade_for_submission - late_day.percentage_loss)
         return 0
