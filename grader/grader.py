@@ -8,6 +8,7 @@ from googleapiclient.errors import HttpError
 from authutil.auth_util import auth_on_google_classroom
 from fetcher.fetcher import StudentSubmission
 from homeworktester.test_result import TestResult
+from n2tconfig import TIMESTAMP_NOT_FOUND_VALUE_LATE_DAYS
 
 
 class IGrader(Protocol):
@@ -121,7 +122,7 @@ class ClassroomGrader:
                     family_name,
                     student_submission.submission_file_name,
                     grade_for_submission,
-                    late_days_for_submission,
+                    0 if late_days_for_submission == TIMESTAMP_NOT_FOUND_VALUE_LATE_DAYS else late_days_for_submission,
                     grade_after_late_days,
                 )
             )
@@ -163,7 +164,7 @@ class ClassroomGrader:
 
     def _get_late_days(self, turn_in_timestamp_str, coursework_due_timestamp):
         if turn_in_timestamp_str is None:
-            return 99999
+            return TIMESTAMP_NOT_FOUND_VALUE_LATE_DAYS
         turn_in_timestamp_str = turn_in_timestamp_str.rstrip("Z")
         turn_in_timestamp = datetime.fromisoformat(turn_in_timestamp_str)
         is_late = turn_in_timestamp > coursework_due_timestamp
