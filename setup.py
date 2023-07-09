@@ -1,8 +1,8 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="n2t-hardware-tester-test1",
-    version="1.0.2",
+    name="n2t-hardware-tester",
+    version="1.0.3",
     packages=find_packages(),
     install_requires=[
         "pytest",
