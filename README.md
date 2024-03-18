@@ -7,7 +7,7 @@ The N2T Hardware Tester is a command-line tool designed to help course facilitat
 ## Installation
 To use the N2T Hardware Tester, install it using the following command:
 
-pip install n2t-hardware-test
+pip install n2t-hardware-tester
 
 # Commands for Students
 ## Testing Archived Homeworks
