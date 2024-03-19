@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="n2t-hardware-tester",
-    version="1.0.4",
+    version="1.0.5",
     packages=find_packages(),
     install_requires=[
         "pytest",
